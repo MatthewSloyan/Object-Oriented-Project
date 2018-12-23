@@ -4,11 +4,15 @@ public class Word {
 	private String book;
 	private String shingle;
 
-	//Contructor & Gets/Sets
+	//Constructor & Gets/Sets
 	public Word(String book, String shingle) {
 		super();
 		this.book = book;
 		this.shingle = shingle;
+	}
+
+	public Word() {
+		super();
 	}
 
 	public String getBook() {

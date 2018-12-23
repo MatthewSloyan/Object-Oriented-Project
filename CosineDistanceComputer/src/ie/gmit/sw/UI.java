@@ -10,7 +10,7 @@ public class UI {
 	public void display() throws IOException {
 			
  		//Running time: O(N);
-		while(keepRunning) {
+		//while(keepRunning) {
 			System.out.println(" ======= Document Comparison Service =======");
 			System.out.println("Enter Subject Directory");
 			String directory = console.next();
@@ -18,19 +18,19 @@ public class UI {
 			System.out.println("Enter Query File or URL");
 			String queryFile = console.next();
 			
-			new Processor().process(directory);
+			new Processor().process(directory, queryFile);
 			
-			System.out.println("Would you like to start again? \n(1) Yes \n(2) No");
+			/*System.out.println("Would you like to start again? \n(1) Yes \n(2) No");
 			String option = console.next();
 			
 			if (Integer.parseInt(option) != 1) {
 				keepRunning = false;
-			}
+			}*/
 			
 			//System.out.println("Please select an option:\n (1) Compare Text File\n (2) Compare Image\n (3) Exit Program\n");
 			//String option = console.next();
 			//process(option);
-		}
+		//}
 	}
 
 	/*private void process(String option) {
