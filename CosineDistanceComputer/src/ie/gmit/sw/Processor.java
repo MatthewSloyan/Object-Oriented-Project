@@ -11,7 +11,7 @@ public class Processor {
 		File f = new File(dir);
 		String [] files = f.list();
 		fileCount = files.length; //count file
-		//BlockingQueue <Words>q = ArrayBlockingQueue<>(); //put in size also 
+		BlockingQueue <Word> q = ArrayBlockingQueue<>(fileCount); //put in size also 
 		
 		//new Thread(new ShingleTaker(q, fileCount)).start();
 		
