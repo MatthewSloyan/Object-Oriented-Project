@@ -14,12 +14,15 @@ public class Processor {
 		fileCount = files.length; //count file
 		BlockingQueue <Word> queue = new ArrayBlockingQueue<>(fileCount); //put in size also 
 		
-		new Thread(new ShingleTaker(queue, fileCount)).start();
+		//new Thread(new FileParser(queue, queryFile)).start();
 		
 		for (String s: files){
 			System.out.println(s);
 			new Thread(new FileParser(queue, s)).start();
 		}
+		
+		new Thread(new ShingleTaker(queue, fileCount)).start();
+		
 	}
 }
 

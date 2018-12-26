@@ -36,6 +36,7 @@ public class FileParser implements Runnable{
 		try {
 			while((line = br.readLine()) != null) {
 				String[] words = line.split(" ");
+				//System.out.println(line);
 				
 				//System.out.println(words[0]);
 				//System.out.println(words[2]);
@@ -43,7 +44,7 @@ public class FileParser implements Runnable{
 				
 				for(String s: words){
 					sString = s.toUpperCase().replaceAll("[^A-Za-z0-9 ]", "");
-					System.out.println(sString);
+					//System.out.println(sString);
 					queue.put(new Word (file, sString));
 				}
 				
@@ -52,10 +53,10 @@ public class FileParser implements Runnable{
 		            System.out.println(sString); 
 		        } */
 				
-				queue.put(new Poison(file, sString)); //finishes
-				System.out.println("Finished");
-				br.close();
 			}
+			queue.put(new Poison(file, sString)); //finishes
+			System.out.println("Finished");
+			br.close();
 		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 		}
