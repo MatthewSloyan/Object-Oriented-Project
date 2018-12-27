@@ -28,7 +28,7 @@ public class FileParser implements Runnable{
 		
 		try {
 			br = new BufferedReader(new InputStreamReader(new FileInputStream("D:\\Pictures\\College\\College\\Third Year\\OOP\\CosineDistanceComputer\\text\\" + file)));
-			//br = new BufferedReader(new FileReader(file));
+			
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
 		}
@@ -36,22 +36,12 @@ public class FileParser implements Runnable{
 		try {
 			while((line = br.readLine()) != null) {
 				String[] words = line.split(" ");
-				//System.out.println(line);
-				
-				//System.out.println(words[0]);
-				//System.out.println(words[2]);
-				//System.out.println(words[5]);
 				
 				for(String s: words){
 					sString = s.toUpperCase().replaceAll("[^A-Za-z0-9 ]", "");
-					//System.out.println(sString);
+					
 					queue.put(new Word (file, sString));
 				}
-				
-				/*for (int i = 0; i < words.length; i++) 
-		        { 
-		            System.out.println(sString); 
-		        } */
 				
 			}
 			queue.put(new Poison(file, sString)); //finishes

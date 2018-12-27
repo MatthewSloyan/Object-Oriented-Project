@@ -13,6 +13,10 @@ public class ShingleTaker implements Runnable{
 	private BlockingQueue<Word> queue;
 	private int fileCount;
 	
+	public Map<String, List<Index>> getDb() {
+		return db;
+	}
+
 	public ShingleTaker(BlockingQueue<Word> q, int count){
 		this.queue = q;
 		this.fileCount = count;
@@ -22,6 +26,7 @@ public class ShingleTaker implements Runnable{
 		while(fileCount > 0) {
 			Word w = new Word();
 			String shingle = null;
+			boolean isInList = false;
 			//int count = 0;
 			
 			try {
@@ -38,13 +43,21 @@ public class ShingleTaker implements Runnable{
 						List<Index> list = new ArrayList<Index>();
 						list = db.get(shingle);
 						
+						isInList = false;
+						
 						for (Index indexList: list){
-							indexList.setFrequency(indexList.getFrequency() + 1);
+							if (indexList.getFilename().equals(w.getBook())){
+								//Increase freq by 1
+								indexList.setFrequency(indexList.getFrequency() + 1);
+								isInList = true;
+							}
 						}
 						
-						//list.add(new Index(1, w.getBook())); //need to update 1
-						db.put(shingle, list);
+						if(isInList == false) {
+							list.add(new Index(1, w.getBook()));
+						}
 						
+						db.put(shingle, list);
 					}
 					else {
 						//list = db.get(shingle);
@@ -52,7 +65,7 @@ public class ShingleTaker implements Runnable{
 						
 						List<Index> list = new ArrayList<Index>();
 						//Word w = db.get(shingle);
-						list.add(new Index(0, w.getBook())); //need to update 1
+						list.add(new Index(1, w.getBook())); //need to update 1
 						db.put(shingle, list);	
 						
 						//System.out.println(shingle + " " + list.size());
