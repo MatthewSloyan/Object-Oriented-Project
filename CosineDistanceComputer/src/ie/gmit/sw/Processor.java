@@ -3,11 +3,9 @@ package ie.gmit.sw;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -23,15 +21,15 @@ public class Processor {
 		String [] files = f.list();
 		fileCount = files.length; //count file
 		BlockingQueue <Word> queue = new ArrayBlockingQueue<>(fileCount); //put in size also 
-		//BlockingQueue <Word> QueryQueue = new ArrayBlockingQueue<>(1); //put in size also
 		
 		Map<String, Integer> fileMap = new HashMap<>();
+		Map<String, Integer> fileMapMagnitude = new HashMap<>();
 		
 		for (String s: files){
-			System.out.println(s);
 			new Thread(new FileParser(queue, dir+"/"+s)).start();
 			
 			fileMap.put(dir+"/"+s, 0);
+			fileMapMagnitude.put(dir+"/"+s, 0);
 		}
 		
 		//new Thread(new FileParser(queue, queryFile)).start();
@@ -39,75 +37,6 @@ public class Processor {
 		ShingleTaker st = new ShingleTaker(queue, fileCount);
 		Thread t1 = new Thread(st); 
         t1.start(); 
-        
-        try {
-			t1.join(); 
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        
-        Map<String, List<Index>> completeMap = st.getDb();
-        
-        /*for (Index indexList: list){
-			
-		}*/
-        
-        /*for (String key : completeMap.keySet()) {
-        	List<Index> list = completeMap.get(key);
-        	
-        	for (Index indexList: list){
-				
-			}
-        }*/
-        
-        double result = 0;
-        //int result2 = 0;
-        //for (Map.Entry<String, List<Index>> entry : completeMap.entrySet()) {
-        
-        for (String key : completeMap.keySet()) {
-            //String key = entry.getKey();
-            List<Index> list = completeMap.get(key);
-            
-            for (Index indexList: list){
-				if(indexList.getFilename().equals(dir+"/Test.txt")) {
-					result += indexList.getFrequency();
-				}
-			}
-            
-            /*for (Index indexList: list){
-				if(indexList.getFilename().equals("Hello.txt")) {
-					result2 += indexList.getFrequency();
-				}
-			}*/
-        }
-        
-        System.out.println("File M " + result);
-        //System.out.println(result2);
-        
-        //======================
-        /*new Thread(new FileParser(QueryQueue, queryFile)).start();
-        
-        ShingleTaker st2 = new ShingleTaker(QueryQueue, 1);
-		Thread t2 = new Thread(st); 
-        t2.start(); 
-        
-        try {
-			t2.join();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        
-        Map<String, List<Index>> db2 = st2.getDb();
-        
-        for (String key : db.keySet()) {
-            if (!db2.containsKey(key)) {
-            	db.remove(key);
-            }
-        }
-        
-        System.out.println();*/
         
         BufferedReader br = null;
 		String line = null;
@@ -138,39 +67,59 @@ public class Processor {
 			e.printStackTrace();
 		}
 		
-		double count = 0;
-		
-		map.size();
+		double queryMagnitude = 0;
 		
 		for (String key : map.keySet()) {
 			Integer num = map.get(key);
     	
-			count += num;
+			queryMagnitude += num;
 		}
-		
-		System.out.println("Query M " + count);
-		
-		double finalResult = 0;
-		int countNum = 0;
-		
+        
+		//THREAD
+        try {
+			t1.join(); 
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+        Map<String, List<Index>> completeMap = st.getDb();
+        
+        //FILE STRUCTURE
+        
+        for (String key : completeMap.keySet()) {
+            List<Index> list = completeMap.get(key);
+            
+            for (Index indexList: list){
+            	
+				if(fileMapMagnitude.containsKey(indexList.getFilename())) {
+					int magnitudeCount = fileMapMagnitude.get(indexList.getFilename());
+					
+					magnitudeCount += indexList.getFrequency();
+					
+					fileMapMagnitude.put(indexList.getFilename(), magnitudeCount);
+				}
+			}
+        }
+        
 		//Get unique words from both sequences
         //HashSet<String> intersection = new HashSet<>(map.keySet());
         //intersection.retainAll(completeMap.keySet());
 		
 		for (String key : map.keySet()) {
 			if (map.containsKey(key) && completeMap.containsKey(key)) {
-				countNum++;
+				
 				Integer num = map.get(key);
 				List<Index> list = completeMap.get(key);
-				
-				int calculatedNum = 0;
 				
 				 for (Index indexList: list){
 					 
 					if(fileMap.containsKey(indexList.getFilename())) {
 						int dotProductCount = fileMap.get(indexList.getFilename());
 						
-						if (num >= indexList.getFrequency()){
+						//dotProductCount += num * indexList.getFrequency();
+						
+						if (num < indexList.getFrequency()){
 							dotProductCount += num;
 						}
 						else {
@@ -181,25 +130,25 @@ public class Processor {
 				 }
 			} //if
         } //for
-		System.out.println("Dot " + fileMap.get(dir+"/Test.txt"));
 		
-		double dot = 0;
-		/*double file = Math.sqrt(result);
-		double q = Math.sqrt(count);
-		double fin = 0;
-		
-		if (file > q) {
-			fin = file;
+		for (String i : files) {
+			String file = i;
+			double cosine = 0;
+    	
+			cosine = calculateCosine(fileMap.get(dir+"/"+file), queryMagnitude, fileMapMagnitude.get(dir+"/"+file));
+			
+			System.out.println("Qeury file: " + queryFile + " is " + cosine + "percent similar to " + file);
 		}
-		else {
-			fin = q;
-		}*/
 		
-		dot = fileMap.get(dir+"/Test.txt") / (Math.sqrt(count * result));
-		
-		System.out.println("Cosine " + dot);
-		
-		System.out.println("Count " + countNum);
 	}
+
+	private double calculateCosine(Integer dotProduct, double magnitude1, Integer magnitude2) {
+		double cosine = 0;
+		
+		cosine = dotProduct / (Math.sqrt(magnitude1 * magnitude2));
+		
+		return cosine;
+	}
+
 }
 
