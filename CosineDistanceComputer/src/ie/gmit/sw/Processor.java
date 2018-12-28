@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import javax.management.Query;
+
 
 public class Processor {
 	
@@ -22,27 +24,49 @@ public class Processor {
 		fileCount = files.length; //count file
 		BlockingQueue <Word> queue = new ArrayBlockingQueue<>(fileCount); //put in size also 
 		
-		Map<String, Integer> fileMap = new HashMap<>();
+		//Map<String, Integer> queryMap = new HashMap<>();
+		
+		Map<String, Integer> fileMapDotProduct = new HashMap<>();
 		Map<String, Integer> fileMapMagnitude = new HashMap<>();
 		
+		long startTime = System.nanoTime(); //running time of program
+		
 		for (String s: files){
-			new Thread(new FileParser(queue, dir+"/"+s)).start();
+			new Thread(new FileParser(queue, dir, s)).start();
 			
-			fileMap.put(dir+"/"+s, 0);
-			fileMapMagnitude.put(dir+"/"+s, 0);
+			fileMapDotProduct.put(s, 0);
+			fileMapMagnitude.put(s, 0);
 		}
 		
-		//new Thread(new FileParser(queue, queryFile)).start();
+		//new Thread(new FileParser(queryMap, queryFile)).start();
+		
+		/*FileParser fp = new FileParser(queryMap, queryFile);
+		Thread t1 = new Thread(fp); 
+		t1.start();*/
+		
+		/*ShingleTaker st = new ShingleTaker(queue, fileCount);
+		Thread t2 = new Thread(st); 
+        t2.start(); 
+        
+        //THREAD
+        try {
+			t1.join(); 
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+        //Map<String, Integer> map = fp.getQueryMap(); */
 		
 		ShingleTaker st = new ShingleTaker(queue, fileCount);
-		Thread t1 = new Thread(st); 
-        t1.start(); 
+		Thread t2 = new Thread(st); 
+        t2.start(); 
+
+        Map<String, Integer> map = new HashMap<>();
         
         BufferedReader br = null;
 		String line = null;
 		String sString = null;
-		
-		Map<String, Integer> map = new TreeMap<>();
 		
 		try {
 			br = new BufferedReader(new InputStreamReader(new FileInputStream(queryFile)));
@@ -77,7 +101,7 @@ public class Processor {
         
 		//THREAD
         try {
-			t1.join(); 
+			t2.join(); 
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -114,8 +138,8 @@ public class Processor {
 				
 				 for (Index indexList: list){
 					 
-					if(fileMap.containsKey(indexList.getFilename())) {
-						int dotProductCount = fileMap.get(indexList.getFilename());
+					if(fileMapDotProduct.containsKey(indexList.getFilename())) {
+						int dotProductCount = fileMapDotProduct.get(indexList.getFilename());
 						
 						//dotProductCount += num * indexList.getFrequency();
 						
@@ -125,20 +149,26 @@ public class Processor {
 						else {
 							dotProductCount += indexList.getFrequency();
 						}
-						fileMap.put(indexList.getFilename(), dotProductCount);
+						fileMapDotProduct.put(indexList.getFilename(), dotProductCount);
 					}
 				 }
 			} //if
         } //for
 		
+		//COSINE CALCULATION
 		for (String i : files) {
 			String file = i;
 			double cosine = 0;
     	
-			cosine = calculateCosine(fileMap.get(dir+"/"+file), queryMagnitude, fileMapMagnitude.get(dir+"/"+file));
+			cosine = calculateCosine(fileMapDotProduct.get(file), queryMagnitude, fileMapMagnitude.get(file));
 			
-			System.out.println("Qeury file: " + queryFile + " is " + cosine + "percent similar to " + file);
+			System.out.println("Query file: " + queryFile + " is " + cosine + "percent similar to " + file);
 		}
+		
+		//running time
+		System.out.println("\nRunning time (ms): " + (System.nanoTime() - startTime));
+		final long usedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+		System.out.println("Used memory: " + usedMem);
 		
 	}
 
@@ -149,6 +179,4 @@ public class Processor {
 		
 		return cosine;
 	}
-
 }
-
