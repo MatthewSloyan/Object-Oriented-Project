@@ -27,7 +27,7 @@ public class FileParser implements Runnable{
 		System.out.println("Hello " + file);
 		
 		try {
-			br = new BufferedReader(new InputStreamReader(new FileInputStream("D:\\Pictures\\College\\College\\Third Year\\OOP\\CosineDistanceComputer\\text\\" + file)));
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
 			
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();

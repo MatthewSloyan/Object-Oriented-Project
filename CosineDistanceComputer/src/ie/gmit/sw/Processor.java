@@ -26,21 +26,59 @@ public class Processor {
 		
 		for (String s: files){
 			System.out.println(s);
-			new Thread(new FileParser(queue, s)).start();
+			new Thread(new FileParser(queue, dir+"/"+s)).start();
 		}
+		
+		//new Thread(new FileParser(queue, queryFile)).start();
 		
 		ShingleTaker st = new ShingleTaker(queue, fileCount);
 		Thread t1 = new Thread(st); 
         t1.start(); 
         
-        /*try {
-			t1.join();
+        try {
+			t1.join(); 
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+        
+        Map<String, List<Index>> completeMap = st.getDb();
+        
+        /*for (Index indexList: list){
+			
 		}*/
         
-        //Map<String, List<Index>> db = st.getDb();
+        /*for (String key : completeMap.keySet()) {
+        	List<Index> list = completeMap.get(key);
+        	
+        	for (Index indexList: list){
+				
+			}
+        }*/
+        
+        double result = 0;
+        //int result2 = 0;
+        //for (Map.Entry<String, List<Index>> entry : completeMap.entrySet()) {
+        
+        for (String key : completeMap.keySet()) {
+            //String key = entry.getKey();
+            List<Index> list = completeMap.get(key);
+            
+            for (Index indexList: list){
+				if(indexList.getFilename().equals(dir+"/Test.txt")) {
+					result += indexList.getFrequency();
+				}
+			}
+            
+            /*for (Index indexList: list){
+				if(indexList.getFilename().equals("Hello.txt")) {
+					result2 += indexList.getFrequency();
+				}
+			}*/
+        }
+        
+        System.out.println("File M " + result);
+        //System.out.println(result2);
         
         //======================
         /*new Thread(new FileParser(QueryQueue, queryFile)).start();
@@ -66,14 +104,14 @@ public class Processor {
         
         System.out.println();*/
         
-        /*BufferedReader br = null;
+        BufferedReader br = null;
 		String line = null;
 		String sString = null;
 		
 		Map<String, Integer> map = new TreeMap<>();
 		
 		try {
-			br = new BufferedReader(new InputStreamReader(new FileInputStream("D:\\Pictures\\College\\College\\Third Year\\OOP\\CosineDistanceComputer\\text\\" + queryFile)));
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(queryFile)));
 			
 			while((line = br.readLine()) != null) {
 				String[] words = line.split(" ");
@@ -95,7 +133,63 @@ public class Processor {
 			e.printStackTrace();
 		}
 		
-		System.out.println();*/
+		double count = 0;
+		
+		map.size();
+		
+		for (String key : map.keySet()) {
+			Integer num = map.get(key);
+    	
+			count += num;
+		}
+		
+		System.out.println("Query M " + count);
+		
+		double finalResult = 0;
+		int countNum = 0;
+		
+		for (String key : map.keySet()) {
+			if (map.containsKey(key) && completeMap.containsKey(key)) {
+				countNum++;
+				Integer num = map.get(key);
+				List<Index> list = completeMap.get(key);
+				
+				int calculatedNum = 0;
+				
+				 for (Index indexList: list){
+					 
+					if(indexList.getFilename().equals(dir+"/Test.txt")) {
+						if (num >= indexList.getFrequency()){
+							calculatedNum = num;
+						}
+						else {
+							calculatedNum = indexList.getFrequency();
+						}
+					}
+				 }
+				 
+				 finalResult += calculatedNum;
+			} //if
+        } //for
+		System.out.println("Dot " + finalResult);
+		
+		double dot = 0;
+		/*double file = Math.sqrt(result);
+		double q = Math.sqrt(count);
+		double fin = 0;
+		
+		if (file > q) {
+			fin = file;
+		}
+		else {
+			fin = q;
+		}*/
+		
+		dot = finalResult / (Math.sqrt(count * result));
+		
+		System.out.println("Cosine " + dot);
+		
+		System.out.println("Count " + countNum);
 	}
 }
 
