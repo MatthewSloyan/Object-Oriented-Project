@@ -50,9 +50,6 @@ public class FileParser implements Runnable{
 		try {
 			while((line = br.readLine()) != null) {
 				String[] words = pattern.split(line.toUpperCase().replaceAll("[^A-Za-z0-9 ]", ""));
-				//ArrayList<String> wordsAL = new ArrayList<String>(Arrays.asList(words));
-				
-				//int length = wordsAL.size();
 				
 				//System.out.println("Length " + words.length);
 				//System.out.println("Remainder " + words.length % 3);
@@ -77,7 +74,7 @@ public class FileParser implements Runnable{
 					queue.put(new Word (file, stripptedString));
 				}
 				
-				if (arrayLength % 3 == 0) {
+				if (savedString != "") {
 					queue.put(new Word (file, savedString));
 					savedString = "";
 				}

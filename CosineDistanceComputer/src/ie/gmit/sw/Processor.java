@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.regex.Pattern;
 
 
 public class Processor {
@@ -64,24 +65,52 @@ public class Processor {
         
         BufferedReader br = null;
 		String line = null;
-		String sString = null;
+		String savedString = "";
+		String stripptedString = null;
+		Pattern pattern = Pattern.compile(" ");
 		
 		try {
 			br = new BufferedReader(new InputStreamReader(new FileInputStream(queryFile)));
 			
 			while((line = br.readLine()) != null) {
-				String[] words = line.split(" ");
+				String[] words = pattern.split(line.toUpperCase().replaceAll("[^A-Za-z0-9 ]", ""));
 				
-				for(String s: words){
-					sString = s.toUpperCase().replaceAll("[^A-Za-z0-9 ]", "");
+				int arrayLength = words.length;
+				
+				if (arrayLength % 3 == 1) {
+					savedString = words[arrayLength - 1];
+					arrayLength -= 1;
+				}
+				else if (arrayLength % 3 == 2) {
+					savedString = words[arrayLength - 2] + " " + words[arrayLength - 1];
+					arrayLength -= 2; 
+				}
+				
+				//FOR
+				for (int i = 0; i < arrayLength; i+=3) { 
 					int count = 1;
 					
-					if (map.containsKey(sString)){
-						count = map.get(sString);
+					stripptedString = words[i];
+					stripptedString += " " + words[i+1];
+					stripptedString += " " + words[i+2];
+					
+					if (map.containsKey(stripptedString)){
+						count = map.get(stripptedString);
 						count++;
 					}
 					
-					map.put(sString, count);
+					map.put(stripptedString, count);
+				}
+				
+				if (savedString != "") {
+					int count = 1;
+					
+					if (map.containsKey(savedString)){
+						count = map.get(savedString);
+						count++;
+					}
+					map.put(savedString, count);
+					savedString = "";
 				}
 			}
 			br.close();
