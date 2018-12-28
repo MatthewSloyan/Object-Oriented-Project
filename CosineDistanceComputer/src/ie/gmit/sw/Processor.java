@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -24,9 +25,13 @@ public class Processor {
 		BlockingQueue <Word> queue = new ArrayBlockingQueue<>(fileCount); //put in size also 
 		//BlockingQueue <Word> QueryQueue = new ArrayBlockingQueue<>(1); //put in size also
 		
+		Map<String, Integer> fileMap = new HashMap<>();
+		
 		for (String s: files){
 			System.out.println(s);
 			new Thread(new FileParser(queue, dir+"/"+s)).start();
+			
+			fileMap.put(dir+"/"+s, 0);
 		}
 		
 		//new Thread(new FileParser(queue, queryFile)).start();
@@ -148,6 +153,10 @@ public class Processor {
 		double finalResult = 0;
 		int countNum = 0;
 		
+		//Get unique words from both sequences
+        //HashSet<String> intersection = new HashSet<>(map.keySet());
+        //intersection.retainAll(completeMap.keySet());
+		
 		for (String key : map.keySet()) {
 			if (map.containsKey(key) && completeMap.containsKey(key)) {
 				countNum++;
@@ -158,20 +167,21 @@ public class Processor {
 				
 				 for (Index indexList: list){
 					 
-					if(indexList.getFilename().equals(dir+"/Test.txt")) {
+					if(fileMap.containsKey(indexList.getFilename())) {
+						int dotProductCount = fileMap.get(indexList.getFilename());
+						
 						if (num >= indexList.getFrequency()){
-							calculatedNum = num;
+							dotProductCount += num;
 						}
 						else {
-							calculatedNum = indexList.getFrequency();
+							dotProductCount += indexList.getFrequency();
 						}
+						fileMap.put(indexList.getFilename(), dotProductCount);
 					}
 				 }
-				 
-				 finalResult += calculatedNum;
 			} //if
         } //for
-		System.out.println("Dot " + finalResult);
+		System.out.println("Dot " + fileMap.get(dir+"/Test.txt"));
 		
 		double dot = 0;
 		/*double file = Math.sqrt(result);
@@ -185,7 +195,7 @@ public class Processor {
 			fin = q;
 		}*/
 		
-		dot = finalResult / (Math.sqrt(count * result));
+		dot = fileMap.get(dir+"/Test.txt") / (Math.sqrt(count * result));
 		
 		System.out.println("Cosine " + dot);
 		
