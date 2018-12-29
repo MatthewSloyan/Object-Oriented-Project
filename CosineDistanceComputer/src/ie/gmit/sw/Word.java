@@ -2,10 +2,10 @@ package ie.gmit.sw;
 
 public class Word {
 	private String book;
-	private String shingle;
+	private int shingle;
 
 	//Constructor & Gets/Sets
-	public Word(String book, String shingle) {
+	public Word(String book, int shingle) {
 		super();
 		this.book = book;
 		this.shingle = shingle;
@@ -23,11 +23,11 @@ public class Word {
 		this.book = book;
 	}
 
-	public String getShingle() {
+	public int getShingle() {
 		return shingle;
 	}
 
-	public void setShingle(String shingle) {
+	public void setShingle(int shingle) {
 		this.shingle = shingle;
 	}
 }

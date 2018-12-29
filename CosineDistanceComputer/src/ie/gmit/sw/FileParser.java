@@ -71,15 +71,15 @@ public class FileParser implements Runnable{
 					stripptedString += " " + words[i+1];
 					stripptedString += " " + words[i+2];
 					
-					queue.put(new Word (file, stripptedString));
+					queue.put(new Word (file, stripptedString.hashCode()));
 				}
 				
 				if (savedString != "") {
-					queue.put(new Word (file, savedString));
+					queue.put(new Word (file, savedString.hashCode()));
 					savedString = "";
 				}
 			}
-			queue.put(new Poison(file, stripptedString)); //finishes
+			queue.put(new Poison(file, stripptedString.hashCode())); //finishes
 			System.out.println("Finished");
 			br.close();
 		} catch (IOException | InterruptedException e) {

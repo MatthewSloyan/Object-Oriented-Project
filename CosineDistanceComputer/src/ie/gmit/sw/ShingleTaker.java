@@ -8,11 +8,11 @@ import java.util.concurrent.BlockingQueue;
 
 public class ShingleTaker implements Runnable{
 	
-	private Map<String, List<Index>> db = new TreeMap<>();
+	private Map<Integer, List<Index>> db = new TreeMap<>();
 	private BlockingQueue<Word> queue;
 	private int fileCount;
 	
-	public Map<String, List<Index>> getDb() {
+	public Map<Integer, List<Index>> getDb() {
 		return db;
 	}
 
@@ -24,7 +24,7 @@ public class ShingleTaker implements Runnable{
 	public void run(){
 		while(fileCount > 0) {
 			Word w = new Word();
-			String shingle = null;
+			int shingle = 0;
 			boolean isInList = false;
 			
 			try {

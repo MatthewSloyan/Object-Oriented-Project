@@ -10,7 +10,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.regex.Pattern;
+
+import callableEx.ExecutorThreadPoolCallableExample.FuzzyLevenshtein;
+import callableEx.ExecutorThreadPoolCallableExample.Result;
 
 
 public class Processor {
@@ -57,11 +63,26 @@ public class Processor {
         
         //Map<String, Integer> map = fp.getQueryMap(); */
 		
+		//Start a thread pool of size poolSize
+		/*ExecutorService es = Executors.newFixedThreadPool(3);
+		
+		Future<Result> result = es.submit(new ShingleTaker(queue, fileCount));
+		col.add(result); //Add the Future to the results collection
+*/		
 		ShingleTaker st = new ShingleTaker(queue, fileCount);
 		Thread t2 = new Thread(st); 
         t2.start(); 
+        
+		//THREAD
+        try {
+			t2.join(); 
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+        
+        Map<Integer, List<Index>> completeMap = st.getDb();
 
-        Map<String, Integer> map = new HashMap<>();
+        Map<Integer, Integer> map = new HashMap<>();
         
         BufferedReader br = null;
 		String line = null;
@@ -94,22 +115,22 @@ public class Processor {
 					stripptedString += " " + words[i+1];
 					stripptedString += " " + words[i+2];
 					
-					if (map.containsKey(stripptedString)){
-						count = map.get(stripptedString);
+					if (map.containsKey(stripptedString.hashCode())){
+						count = map.get(stripptedString.hashCode());
 						count++;
 					}
 					
-					map.put(stripptedString, count);
+					map.put(stripptedString.hashCode(), count);
 				}
 				
 				if (savedString != "") {
 					int count = 1;
 					
-					if (map.containsKey(savedString)){
-						count = map.get(savedString);
+					if (map.containsKey(savedString.hashCode())){
+						count = map.get(savedString.hashCode());
 						count++;
 					}
-					map.put(savedString, count);
+					map.put(savedString.hashCode(), count);
 					savedString = "";
 				}
 			}
@@ -118,27 +139,10 @@ public class Processor {
 			e.printStackTrace();
 		}
 		
-		double queryMagnitude = 0;
-		
-		for (String key : map.keySet()) {
-			Integer num = map.get(key);
-    	
-			queryMagnitude += num;
-		}
-        
-		//THREAD
-        try {
-			t2.join(); 
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        
-        Map<String, List<Index>> completeMap = st.getDb();
         
         //FILE STRUCTURE
         
-        for (String key : completeMap.keySet()) {
+        for (int key : completeMap.keySet()) {
             List<Index> list = completeMap.get(key);
             
             for (Index indexList: list){
@@ -156,11 +160,16 @@ public class Processor {
 		//Get unique words from both sequences
         //HashSet<String> intersection = new HashSet<>(map.keySet());
         //intersection.retainAll(completeMap.keySet());
+        
+        double queryMagnitude = 0;
 		
-		for (String key : map.keySet()) {
+		for (int key : map.keySet()) {
+			Integer num = map.get(key);
+	    	
+			queryMagnitude += num;
+			
 			if (map.containsKey(key) && completeMap.containsKey(key)) {
 				
-				Integer num = map.get(key);
 				List<Index> list = completeMap.get(key);
 				
 				 for (Index indexList: list){
@@ -189,14 +198,13 @@ public class Processor {
     	
 			cosine = calculateCosine(fileMapDotProduct.get(file), queryMagnitude, fileMapMagnitude.get(file));
 			
-			System.out.println("Query file: " + queryFile + " is " + cosine + "percent similar to " + file);
+			System.out.printf("Query file: %s is %.4f percent similar to %s %n", queryFile, cosine*100, file);
 		}
 		
 		//running time
 		System.out.println("\nRunning time (ms): " + (System.nanoTime() - startTime));
 		final long usedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
 		System.out.println("Used memory: " + usedMem);
-		
 	}
 
 	private double calculateCosine(Integer dotProduct, double magnitude1, Integer magnitude2) {
