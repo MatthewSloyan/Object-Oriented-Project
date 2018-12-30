@@ -3,11 +3,9 @@ package ie.gmit.sw;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentSkipListMap;
-import java.util.concurrent.Future;
 
 
 public class ShingleTaker implements Callable<ConcurrentSkipListMap<Integer, List<Index>>>{

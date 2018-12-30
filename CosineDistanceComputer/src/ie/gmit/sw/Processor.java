@@ -1,10 +1,6 @@
 package ie.gmit.sw;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +11,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.regex.Pattern;
 
 public class Processor {
 	
@@ -28,7 +23,7 @@ public class Processor {
 		BlockingQueue <Word> queue = new ArrayBlockingQueue<>(fileCount); //put in size also 
 		
 		//Start a thread pool of size poolSize
-		ExecutorService es = Executors.newFixedThreadPool(10);
+		ExecutorService es = Executors.newFixedThreadPool(5);
 		
 		Map<Integer, Integer> fileMapDotProduct = new HashMap<>();
 		Map<Integer, Integer> fileMapMagnitude = new HashMap<>();
@@ -37,77 +32,18 @@ public class Processor {
 		
 		for (String s: files){
 			es.execute(new FileParser(queue, dir, s));
-			//new Thread(new FileParser(queue, dir, s)).start();
 			
 			fileMapDotProduct.put(s.hashCode(), 0);
 			fileMapMagnitude.put(s.hashCode(), 0);
 		}
 		
-		//Start a thread pool of size poolSize
+		//Start a single thread executor
 		ExecutorService es1 = Executors.newSingleThreadExecutor();
-		
 		Future<ConcurrentSkipListMap<Integer, List<Index>>> completeMap = es1.submit(new ShingleTaker(queue, fileCount));
-
-        Map<Integer, Integer> map = new HashMap<>();
-        
-        BufferedReader br = null;
-		String line = null;
-		String savedString = "";
-		String stripptedString = null;
-		Pattern pattern = Pattern.compile(" ");
 		
-		try {
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(queryFile)));
-			
-			while((line = br.readLine()) != null) {
-				String[] words = pattern.split(line.toUpperCase().replaceAll("[^A-Za-z0-9 ]", ""));
-				
-				int arrayLength = words.length;
-				
-				if (arrayLength % 3 == 1) {
-					savedString = words[arrayLength - 1];
-					arrayLength -= 1;
-				}
-				else if (arrayLength % 3 == 2) {
-					savedString = words[arrayLength - 2] + " " + words[arrayLength - 1];
-					arrayLength -= 2; 
-				}
-				
-				//FOR
-				for (int i = 0; i < arrayLength; i+=3) { 
-					int count = 1;
-					
-					stripptedString = words[i];
-					stripptedString += " " + words[i+1];
-					stripptedString += " " + words[i+2];
-					
-					if (map.containsKey(stripptedString.hashCode())){
-						count = map.get(stripptedString.hashCode());
-						count++;
-					}
-					
-					map.put(stripptedString.hashCode(), count);
-				}
-				
-				if (savedString != "") {
-					int count = 1;
-					
-					if (map.containsKey(savedString.hashCode())){
-						count = map.get(savedString.hashCode());
-						count++;
-					}
-					map.put(savedString.hashCode(), count);
-					savedString = "";
-				}
-			}
-			br.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-        
-		//Get unique words from both sequences
-        //HashSet<String> intersection = new HashSet<>(map.keySet());
-        //intersection.retainAll(completeMap.keySet());
+		//Start a single thread executor
+		ExecutorService es2 = Executors.newSingleThreadExecutor();
+		Future<ConcurrentSkipListMap<Integer, Integer>> queryMap = es2.submit(new QueryFileParser(queryFile));
         
         double queryMagnitude = 0;
 		
@@ -128,12 +64,12 @@ public class Processor {
 				}
 			}
 			
-			for (int key : map.keySet()) {
-				Integer num = map.get(key);
+			for (int key : queryMap.get().keySet()) {
+				Integer num = queryMap.get().get(key);
 				
 				queryMagnitude += num;
 				
-				if (map.containsKey(key) && completeMap.get().containsKey(key)) {
+				if (queryMap.get().containsKey(key) && completeMap.get().containsKey(key)) {
 					
 					List<Index> list = completeMap.get().get(key);
 					
@@ -156,7 +92,6 @@ public class Processor {
 				} //if
 			} //for
 		} catch (InterruptedException | ExecutionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -165,6 +100,10 @@ public class Processor {
 			new CalculateCosine().calculateCosine(queryFile, s, fileMapDotProduct.get(s.hashCode()), 
 					queryMagnitude, fileMapMagnitude.get(s.hashCode()));
 		}
+		
+		es.shutdown();
+		es1.shutdown();
+		es2.shutdown();
 		
 		//running time
 		System.out.println("\nRunning time (ms): " + (System.nanoTime() - startTime));

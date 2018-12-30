@@ -2,26 +2,24 @@ package ie.gmit.sw;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.regex.Pattern;
 
-public class FileParser implements Runnable{
+public class QueryFileParser implements Callable<ConcurrentSkipListMap<Integer, Integer>>{
 	
-	private BlockingQueue<Word> queue;
-	private String dir;
+	private ConcurrentSkipListMap<Integer, Integer> queryMap = new ConcurrentSkipListMap<Integer, Integer>();
 	private String file;
 	
-	//Constructors
-	public FileParser(BlockingQueue<Word> queue, String dir, String file){
-		this.queue = queue;
-		this.dir = dir;
+	public QueryFileParser(String file) {
+		super();
 		this.file = file;
 	}
-
-	public void run() {
+	
+	public ConcurrentSkipListMap<Integer, Integer> call() throws Exception{
+		
 		BufferedReader br = null;
 		String line = null;
 		String savedString = "";
@@ -29,13 +27,8 @@ public class FileParser implements Runnable{
 		Pattern pattern = Pattern.compile(" ");
 		
 		try {
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(dir+"/"+file)));
+			br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
 			
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-		}
-		
-		try {
 			while((line = br.readLine()) != null) {
 				String[] words = pattern.split(line.toUpperCase().replaceAll("[^A-Za-z0-9 ]", ""));
 				
@@ -52,23 +45,36 @@ public class FileParser implements Runnable{
 				
 				//FOR
 				for (int i = 0; i < arrayLength; i+=3) { 
+					int count = 1;
+					
 					stripptedString = words[i];
 					stripptedString += " " + words[i+1];
 					stripptedString += " " + words[i+2];
 					
-					queue.put(new Word (file.hashCode(), stripptedString.hashCode()));
+					if (queryMap.containsKey(stripptedString.hashCode())){
+						count = queryMap.get(stripptedString.hashCode());
+						count++;
+					}
+					
+					queryMap.put(stripptedString.hashCode(), count);
 				}
 				
 				if (savedString != "") {
-					queue.put(new Word (file.hashCode(), savedString.hashCode()));
+					int count = 1;
+					
+					if (queryMap.containsKey(savedString.hashCode())){
+						count = queryMap.get(savedString.hashCode());
+						count++;
+					}
+					queryMap.put(savedString.hashCode(), count);
 					savedString = "";
 				}
 			}
-			queue.put(new Poison(file.hashCode(), stripptedString.hashCode())); //finishes
-			System.out.println("Finished");
 			br.close();
-		} catch (IOException | InterruptedException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		return queryMap;
 	}
 }
