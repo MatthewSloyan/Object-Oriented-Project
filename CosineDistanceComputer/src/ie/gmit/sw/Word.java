@@ -1,13 +1,13 @@
 package ie.gmit.sw;
 
 public class Word {
-	private String book;
+	private int book;
 	private int shingle;
 
 	//Constructor & Gets/Sets
-	public Word(String book, int shingle) {
+	public Word(int i, int shingle) {
 		super();
-		this.book = book;
+		this.book = i;
 		this.shingle = shingle;
 	}
 
@@ -15,11 +15,11 @@ public class Word {
 		super();
 	}
 
-	public String getBook() {
+	public int getBook() {
 		return book;
 	}
 
-	public void setBook(String book) {
+	public void setBook(int book) {
 		this.book = book;
 	}
 

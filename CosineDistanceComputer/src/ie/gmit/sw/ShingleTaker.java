@@ -5,10 +5,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.Future;
 
-public class ShingleTaker implements Runnable{
+
+public class ShingleTaker implements Callable<ConcurrentSkipListMap<Integer, List<Index>>>{
 	
-	private Map<Integer, List<Index>> db = new TreeMap<>();
+	//private Map<Integer, List<Index>> db = new TreeMap<>();
+	ConcurrentSkipListMap<Integer, List<Index>> db = new ConcurrentSkipListMap<>();
 	private BlockingQueue<Word> queue;
 	private int fileCount;
 	
@@ -21,7 +26,7 @@ public class ShingleTaker implements Runnable{
 		this.fileCount = count;
 	}
 
-	public void run(){
+	public ConcurrentSkipListMap<Integer, List<Index>> call() throws Exception{
 		while(fileCount > 0) {
 			Word w = new Word();
 			int shingle = 0;
@@ -43,7 +48,7 @@ public class ShingleTaker implements Runnable{
 						isInList = false;
 						
 						for (Index indexList: list){
-							if (indexList.getFilename().equals(w.getBook())){
+							if (indexList.getFilename() == w.getBook()){
 								//Increase freq by 1
 								indexList.setFrequency(indexList.getFrequency() + 1);
 								isInList = true;
@@ -55,12 +60,14 @@ public class ShingleTaker implements Runnable{
 						}
 						
 						db.put(shingle, list);
+						//return new Result(shingle, list);
 					}
 					else {
 						List<Index> list = new ArrayList<Index>();
 						
 						list.add(new Index(1, w.getBook())); //need to update 1
 						db.put(shingle, list);	
+						//return new Result(shingle, list);
 					}
 				}//outer else
 			} catch (InterruptedException e) {
@@ -71,5 +78,7 @@ public class ShingleTaker implements Runnable{
 				System.out.println("Finished ST"); //completed
 			}
 		}
+		
+		return db;
 	}
 }

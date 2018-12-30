@@ -2,10 +2,10 @@ package ie.gmit.sw;
 
 public class Index {
 	private int frequency;
-	private String filename;
+	private int filename;
 
 	//Constructor, gets and sets
-	public Index(int frequency, String filename) {
+	public Index(int frequency, int filename) {
 		super();
 		this.frequency = frequency;
 		this.filename = filename;
@@ -23,11 +23,11 @@ public class Index {
 		this.frequency = frequency;
 	}
 
-	public String getFilename() {
+	public int getFilename() {
 		return filename;
 	}
 
-	public void setFilename(String filename) {
+	public void setFilename(int filename) {
 		this.filename = filename;
 	}
 }
