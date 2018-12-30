@@ -4,32 +4,55 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.regex.Pattern;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 public class QueryFileParser implements Callable<ConcurrentSkipListMap<Integer, Integer>>{
 	
 	private ConcurrentSkipListMap<Integer, Integer> queryMap = new ConcurrentSkipListMap<Integer, Integer>();
 	private String file;
+	private boolean url;
 	
-	public QueryFileParser(String file) {
+	public QueryFileParser(String file, boolean url) {
 		super();
 		this.file = file;
+		this.url = url;
 	}
 	
 	public ConcurrentSkipListMap<Integer, Integer> call() throws Exception{
 		
 		BufferedReader br = null;
+		Document doc; //used for JSoup
 		String line = null;
 		String savedString = "";
 		String stripptedString = null;
 		Pattern pattern = Pattern.compile(" ");
 		
 		try {
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+			if (url == false) {
+				br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+			}
+			else {
+				URL websiteURL = new URL(file);
+		        URLConnection connectionEstablished = websiteURL.openConnection();
+		        br = new BufferedReader(new InputStreamReader(connectionEstablished.getInputStream()));
+			}
 			
 			while((line = br.readLine()) != null) {
+				
+				//If it's from a URL then parse using Jsoup and get just the text to remove the HTMl tags.
+				//Then set the line to the string for parsing.
+				if (url == true) {
+					doc = Jsoup.parse(line);
+					line = doc.text();
+				}
+				
 				String[] words = pattern.split(line.toUpperCase().replaceAll("[^A-Za-z0-9 ]", ""));
 				
 				int arrayLength = words.length;

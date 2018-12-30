@@ -16,14 +16,14 @@ public class Processor {
 	
 	private int fileCount;
 	
-	public void process(String dir, String queryFile) {
+	public void process(String dir, String queryFile, boolean url) {
 		File f = new File(dir);
 		String [] files = f.list();
 		fileCount = files.length; //count file
 		BlockingQueue <Word> queue = new ArrayBlockingQueue<>(fileCount); //put in size also 
 		
 		//Start a thread pool of size poolSize
-		ExecutorService es = Executors.newFixedThreadPool(5);
+		ExecutorService es = Executors.newFixedThreadPool(4);
 		
 		Map<Integer, Integer> fileMapDotProduct = new HashMap<>();
 		Map<Integer, Integer> fileMapMagnitude = new HashMap<>();
@@ -43,7 +43,7 @@ public class Processor {
 		
 		//Start a single thread executor
 		ExecutorService es2 = Executors.newSingleThreadExecutor();
-		Future<ConcurrentSkipListMap<Integer, Integer>> queryMap = es2.submit(new QueryFileParser(queryFile));
+		Future<ConcurrentSkipListMap<Integer, Integer>> queryMap = es2.submit(new QueryFileParser(queryFile, url));
         
         double queryMagnitude = 0;
 		
