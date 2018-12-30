@@ -1,0 +1,9 @@
+WarAndPeace-LeoTolstoy.txt8.43 DeBelloGallico.txt 
+9.93 GrimmsFairyTales.txt 
+0.28 PoblachtNaHEireann.txt 
+10.84 PrideandPrejudice.txt 
+0.11 Test1.txt 
+0.00 Test2.txt 
+11.21 The Young Castellan.txt 
+11.37 TheAdventuresofSherlockHolmes.txt 
+100.00 WarAndPeace-LeoTolstoy.txt 

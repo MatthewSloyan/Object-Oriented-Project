@@ -5,13 +5,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.ConcurrentHashMap;
 
-
-public class ShingleTaker implements Callable<ConcurrentSkipListMap<Integer, List<Index>>>{
+public class ShingleTaker implements Callable<ConcurrentHashMap<Integer, List<Index>>>{
 	
 	//private Map<Integer, List<Index>> db = new TreeMap<>();
-	ConcurrentSkipListMap<Integer, List<Index>> db = new ConcurrentSkipListMap<>();
+	ConcurrentHashMap<Integer, List<Index>> db = new ConcurrentHashMap<>();
 	private BlockingQueue<Word> queue;
 	private int fileCount;
 	
@@ -24,7 +23,7 @@ public class ShingleTaker implements Callable<ConcurrentSkipListMap<Integer, Lis
 		this.fileCount = count;
 	}
 
-	public ConcurrentSkipListMap<Integer, List<Index>> call() throws Exception{
+	public ConcurrentHashMap<Integer, List<Index>> call() throws Exception{
 		while(fileCount > 0) {
 			Word w = new Word();
 			int shingle = 0;

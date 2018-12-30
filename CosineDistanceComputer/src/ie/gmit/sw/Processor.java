@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -39,11 +39,11 @@ public class Processor {
 		
 		//Start a single thread executor
 		ExecutorService es1 = Executors.newSingleThreadExecutor();
-		Future<ConcurrentSkipListMap<Integer, List<Index>>> completeMap = es1.submit(new ShingleTaker(queue, fileCount));
+		Future<ConcurrentHashMap<Integer, List<Index>>> completeMap = es1.submit(new ShingleTaker(queue, fileCount));
 		
 		//Start a single thread executor
 		ExecutorService es2 = Executors.newSingleThreadExecutor();
-		Future<ConcurrentSkipListMap<Integer, Integer>> queryMap = es2.submit(new QueryFileParser(queryFile, url));
+		Future<ConcurrentHashMap<Integer, Integer>> queryMap = es2.submit(new QueryFileParser(queryFile, url));
         
         double queryMagnitude = 0;
 		
@@ -95,19 +95,25 @@ public class Processor {
 			e.printStackTrace();
 		}
 		
+		StringBuilder sb = new StringBuilder();
+		sb.append(queryFile + "\n");
+		
 		//COSINE CALCULATION
 		for (String s : files) {
-			new CalculateCosine().calculateCosine(queryFile, s, fileMapDotProduct.get(s.hashCode()), 
+			String str = new CalculateCosine().calculateCosine(queryFile, s, fileMapDotProduct.get(s.hashCode()), 
 					queryMagnitude, fileMapMagnitude.get(s.hashCode()));
+			sb.append(str);
 		}
-		
-		es.shutdown();
-		es1.shutdown();
-		es2.shutdown();
 		
 		//running time
 		System.out.println("\nRunning time (ms): " + (System.nanoTime() - startTime));
 		final long usedMem = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
 		System.out.println("Used memory: " + usedMem);
+		
+		new PrintResults().print(sb);
+		
+		es.shutdown();
+		es1.shutdown();
+		es2.shutdown();
 	}
 }

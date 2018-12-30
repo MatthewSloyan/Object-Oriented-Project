@@ -7,15 +7,15 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-public class QueryFileParser implements Callable<ConcurrentSkipListMap<Integer, Integer>>{
+public class QueryFileParser implements Callable<ConcurrentHashMap<Integer, Integer>>{
 	
-	private ConcurrentSkipListMap<Integer, Integer> queryMap = new ConcurrentSkipListMap<Integer, Integer>();
+	private ConcurrentHashMap<Integer, Integer> queryMap = new ConcurrentHashMap<Integer, Integer>();
 	private String file;
 	private boolean url;
 	
@@ -25,7 +25,7 @@ public class QueryFileParser implements Callable<ConcurrentSkipListMap<Integer, 
 		this.url = url;
 	}
 	
-	public ConcurrentSkipListMap<Integer, Integer> call() throws Exception{
+	public ConcurrentHashMap<Integer, Integer> call() throws Exception{
 		
 		BufferedReader br = null;
 		Document doc; //used for JSoup
