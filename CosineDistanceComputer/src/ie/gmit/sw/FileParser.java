@@ -8,19 +8,45 @@ import java.io.InputStreamReader;
 import java.util.concurrent.BlockingQueue;
 import java.util.regex.Pattern;
 
+/**
+* Parse the files in the directory line by line into three word shingles and add them to the queue
+*
+* @author Matthew Sloyan
+*/
 public class FileParser implements Runnable{
 	
 	private BlockingQueue<Word> queue;
 	private String dir;
 	private String file;
 	
-	//Constructors
+	//Constructor
 	public FileParser(BlockingQueue<Word> queue, String dir, String file){
 		this.queue = queue;
 		this.dir = dir;
 		this.file = file;
 	}
 
+	/**
+	* Runnable thread that takes the input directory + the file name and parses it line by line.
+	* Each line is stripped of everything but words and spaces.
+	* Three word shingles are taken from this line, and any remainders are added as single or double shingles (E.g thank you, you)
+	* Each shingle is put on the BlockingQueue as an instance of Word (hashcode of file, hashcode of shingle) for speed
+	* An instance of Posion is put on the queue to signify the file has been fully parsed.
+	* 
+	* For simplicity this class only parses the directory files as it deals with queues.
+	* However the QueryFileParser class deals with query files/urls as it uses a smaller map and returns it's directly
+	* 
+	* @param String directory of files
+	* @param String query file or url entered by user to compare
+	* @param boolean if query is a URL or not
+	* 
+	* @see #Word
+	* @see #Poison
+	* @throws Exception if error occurs when reading file
+	* @exception FileNotFoundException
+	* @exception IOException
+	* @exception InterruptedException
+	*/
 	public void run() {
 		BufferedReader br = null;
 		String line = null;
@@ -41,6 +67,7 @@ public class FileParser implements Runnable{
 				
 				int arrayLength = words.length;
 				
+				//if the remainder is 1 then there is one extra single word to be put on the queue separately.
 				if (arrayLength % 3 == 1) {
 					savedString = words[arrayLength - 1];
 					arrayLength -= 1;
@@ -50,7 +77,7 @@ public class FileParser implements Runnable{
 					arrayLength -= 2; 
 				}
 				
-				//FOR
+				//Loop by three to get three word shingles
 				for (int i = 0; i < arrayLength; i+=3) { 
 					stripptedString = words[i];
 					stripptedString += " " + words[i+1];
@@ -59,6 +86,7 @@ public class FileParser implements Runnable{
 					queue.put(new Word (file.hashCode(), stripptedString.hashCode()));
 				}
 				
+				//if savedString is not equal to "" then there must be a remainder words
 				if (savedString != "") {
 					queue.put(new Word (file.hashCode(), savedString.hashCode()));
 					savedString = "";
@@ -68,7 +96,7 @@ public class FileParser implements Runnable{
 			System.out.println("Finished");
 			br.close();
 		} catch (IOException | InterruptedException e) {
-			e.printStackTrace();
+			System.out.println("Error occured: " + e.getMessage());
 		}
 	}
 }

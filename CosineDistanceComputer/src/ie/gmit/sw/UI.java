@@ -6,6 +6,11 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Scanner;
 
+/**
+* Displays and handles UI options for program
+*
+* @author Matthew Sloyan
+*/
 public class UI {
 	private Scanner console = new Scanner(System.in);
 	private boolean keepRunning = true;
@@ -14,9 +19,19 @@ public class UI {
 	private String directory;
 	private String queryFileURL;
 	
+	/**
+	* Displays menu options to users
+	* Allows the user to enter a subject directory (Checks if exists)
+	* Allows the user to enter a query file or URL to compare against directory files (Checks if exists)
+	* Create instance of Processor class to process inputs
+	* Running time: O(1)
+	*
+	* @see #Processor
+	* @throws Exception if input is invalid
+	* @exception IOException
+	*/
 	public void display() throws IOException {
 			
- 		//Running time: O(N);
 		while(keepRunning) {
 			System.out.println(" ======= Document Comparison Service =======");
 			
@@ -80,6 +95,9 @@ public class UI {
 			System.out.println("Processing, please wait.");
 			System.out.println("==========================\n");
 			
+			/*
+			 * Create instance of Processor class and pass in user input details
+			 */
 			new Processor().process(directory, queryFileURL, url);
 			
 			System.out.println("\nWould you like to start again? \n(1) Yes \n(2) No");
@@ -88,10 +106,6 @@ public class UI {
 			if (Integer.parseInt(option) != 1) {
 				keepRunning = false;
 			}
-			
-			//System.out.println("Please select an option:\n (1) Compare Text File\n (2) Compare Image\n (3) Exit Program\n");
-			//String option = console.next();
-			//process(option);
 		}
 	}
 }
