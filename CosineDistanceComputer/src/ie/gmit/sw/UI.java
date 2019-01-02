@@ -42,6 +42,7 @@ public class UI {
 				File f = new File(directory);
 				isValid = true;
 				
+				//check if directory exists, keeps asking till it is valid
 				if (f.isDirectory()) {
 					isValid = false;
 				}
@@ -64,6 +65,7 @@ public class UI {
 						File f = new File(queryFileURL);
 						isValid = true;
 					
+						//check if file exists, keeps asking till it is valid
 						if (f.exists()) {
 							isValid = false;
 							url = false;
@@ -78,6 +80,7 @@ public class UI {
 
 						isValid = true;
 
+						//check if URL exists, keeps asking till it is valid
 						try {
 							new URL(queryFileURL).toURI();
 							isValid = false;
@@ -95,9 +98,7 @@ public class UI {
 			System.out.println("Processing, please wait.");
 			System.out.println("==========================\n");
 			
-			/*
-			 * Create instance of Processor class and pass in user input details
-			 */
+			//Create instance of Processor class and pass in user input details
 			new Processor().process(directory, queryFileURL, url);
 			
 			System.out.println("\nWould you like to start again? \n(1) Yes \n(2) No");

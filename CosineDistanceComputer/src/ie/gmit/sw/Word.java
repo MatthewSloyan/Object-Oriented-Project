@@ -1,10 +1,20 @@
 package ie.gmit.sw;
 
+/**
+* Word class - used to add words to the BlockingQueue
+*
+* @author Matthew Sloyan
+*/
 public class Word {
 	private int book;
 	private int shingle;
 
-	//Constructor & Gets/Sets
+	/**
+	* Constructor for class
+	* 
+	* @param int - the name of the file as a hashcode
+	* @param int - three words as a hashcode
+	*/
 	public Word(int i, int shingle) {
 		super();
 		this.book = i;
@@ -15,6 +25,7 @@ public class Word {
 		super();
 	}
 
+	//gets and sets
 	public int getBook() {
 		return book;
 	}

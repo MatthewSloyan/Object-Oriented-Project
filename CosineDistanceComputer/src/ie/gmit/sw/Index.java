@@ -1,10 +1,20 @@
 package ie.gmit.sw;
 
+/**
+* Index class - used to create an arraylist in the ShingleTaker class
+*
+* @author Matthew Sloyan
+*/
 public class Index {
 	private int frequency;
 	private int filename;
 
-	//Constructor, gets and sets
+	/**
+	* Constructor for class
+	* 
+	* @param int - the number of times the word occurs
+	* @param int - the name of the file as a hashcode
+	*/
 	public Index(int frequency, int filename) {
 		super();
 		this.frequency = frequency;
@@ -15,6 +25,7 @@ public class Index {
 		super();
 	}
 
+	//Gets and sets 
 	public int getFrequency() {
 		return frequency;
 	}

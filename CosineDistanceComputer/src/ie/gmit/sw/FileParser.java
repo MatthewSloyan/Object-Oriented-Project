@@ -19,7 +19,13 @@ public class FileParser implements Runnable{
 	private String dir;
 	private String file;
 	
-	//Constructor
+	/**
+	* Constructor
+	* 
+	* @param BlockingQueue<Word> - Queue of words to add to
+	* @param String - file directory
+	* @param boolean - name of file
+	*/
 	public FileParser(BlockingQueue<Word> queue, String dir, String file){
 		this.queue = queue;
 		this.dir = dir;
@@ -27,18 +33,14 @@ public class FileParser implements Runnable{
 	}
 
 	/**
-	* Runnable thread that takes the input directory + the file name and parses it line by line.
+	* Runnable thread that uses the input directory + the file name and parses it line by line.
 	* Each line is stripped of everything but words and spaces.
 	* Three word shingles are taken from this line, and any remainders are added as single or double shingles (E.g thank you, you)
 	* Each shingle is put on the BlockingQueue as an instance of Word (hashcode of file, hashcode of shingle) for speed
-	* An instance of Posion is put on the queue to signify the file has been fully parsed.
+	* An instance of Poison is put on the queue to signify the file has been fully parsed.
 	* 
-	* For simplicity this class only parses the directory files as it deals with queues.
+	* For simplicity and SRP this class only parses the directory files as it deals with queues.
 	* However the QueryFileParser class deals with query files/urls as it uses a smaller map and returns it's directly
-	* 
-	* @param String directory of files
-	* @param String query file or url entered by user to compare
-	* @param boolean if query is a URL or not
 	* 
 	* @see #Word
 	* @see #Poison
@@ -52,7 +54,7 @@ public class FileParser implements Runnable{
 		String line = null;
 		String savedString = "";
 		String stripptedString = null;
-		Pattern pattern = Pattern.compile(" ");
+		Pattern pattern = Pattern.compile(" "); //pattern used for additional speed on split
 		
 		try {
 			br = new BufferedReader(new InputStreamReader(new FileInputStream(dir+"/"+file)));
@@ -93,7 +95,6 @@ public class FileParser implements Runnable{
 				}
 			}
 			queue.put(new Poison(file.hashCode(), stripptedString.hashCode())); //finishes
-			System.out.println("Finished");
 			br.close();
 		} catch (IOException | InterruptedException e) {
 			System.out.println("Error occured: " + e.getMessage());
