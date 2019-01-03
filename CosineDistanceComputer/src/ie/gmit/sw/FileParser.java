@@ -41,6 +41,8 @@ public class FileParser implements Runnable{
 	* 
 	* For simplicity and SRP this class only parses the directory files as it deals with queues.
 	* However the QueryFileParser class deals with query files/urls as it uses a smaller map and returns it's directly
+	* Running time: Quadratic O(N^2);
+	* T(n) = n^2 + 6n
 	* 
 	* @see #Word
 	* @see #Poison

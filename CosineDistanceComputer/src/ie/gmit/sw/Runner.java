@@ -4,6 +4,7 @@ import java.io.IOException;
 /**
 * Includes the main method to run the program
 * Creates an instance of UI and calls display()
+* Running time: O(1)
 *
 * @author Matthew Sloyan
 * @see #UI

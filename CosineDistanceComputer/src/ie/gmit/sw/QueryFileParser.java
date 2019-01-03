@@ -45,6 +45,8 @@ public class QueryFileParser implements Callable<ConcurrentHashMap<Integer, Inte
 	* 
 	* For simplicity and SRP this class only parses the query files/urls as it deals with just a single returned map.
 	* However the FileParser class deals with subject directory files (multiple files) and adds them to a queue.
+	* Running time: Quadratic O(N^2);
+	* T(n) = n^2 + 10n
 	* 
 	* @return ConcurrentHashMap of the created map of words and count
 	* 

@@ -20,6 +20,7 @@ public class PrintResults {
 	/**
 	* Ask the user if they would like to print the results to a file (Could be used for comparision later)
 	* If 1 then ask for file name (must include file extension E.g .txt) and then write to file.
+	* Running time: O(1)
 	*/
 	public void printToFile(StringBuilder sb) {
 		do {

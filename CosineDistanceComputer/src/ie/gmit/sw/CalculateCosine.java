@@ -38,6 +38,7 @@ public class CalculateCosine {
 	* Loop through each file and call calculateCosine and pass in values
 	* A formated string of the returned with the results and appended to a string builder.
 	* create an instance of PrintResults and call printToFile(sb) to ask the user if they want to print results to file.
+	* Running time: Linear O(N)
 	* 
 	* @see #PrintResults
 	* @see #calculateCosine
@@ -56,6 +57,7 @@ public class CalculateCosine {
 	
 	/**
 	* Method used in every iteration of print() to return the formatted string of the calculated Cosine Distance.
+	* Running time: O(1)
 	* 
 	* @return String. Formatted string of query file, Cosine Distance and the subject file
 	* @see #print

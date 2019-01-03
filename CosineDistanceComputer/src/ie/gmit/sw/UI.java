@@ -37,7 +37,7 @@ public class UI {
 			
 			do {
 				System.out.println("Enter Subject Directory");
-				directory = console.next();
+				directory = console.nextLine();
 				
 				File f = new File(directory);
 				isValid = true;
@@ -53,14 +53,14 @@ public class UI {
 			
 			do {
 				System.out.println("\nPlease select an option:\n (1) Compare File\n (2) Compare URL");
-				String option = console.next();
+				String option = console.nextLine();
 				
 				isValid = true;
 				
 				if (Integer.parseInt(option) == 1) {
 					do {
 						System.out.println("Please Enter Path to Query File");
-						queryFileURL = console.next();
+						queryFileURL = console.nextLine();
 
 						File f = new File(queryFileURL);
 						isValid = true;

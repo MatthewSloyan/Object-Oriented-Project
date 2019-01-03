@@ -25,6 +25,8 @@ public class Processor {
 	* The queue is used to take words from in the ShingleTaker() class which are added in the FileParser() class.
 	* Using SingleThreadExecutors execute both ShingleTaker() and QueryFileParser() and return to a Future ConcurrentHashMap
 	* Create an instance of CalculateDotProductAndMagnitude() and pass in the maps when ready to calculate and print results.
+	* Running time: Linear O(N)
+	* T(n) = n + 14
 	* 
 	* @param String directory of files
 	* @param String query file or url entered by user to compare

@@ -42,6 +42,8 @@ public class CalculateDotProductAndMagnitude{
 	* Loop through the fileMap to count up the magnitude
 	* Loop through the queryMap and if both maps contain the same word then add to the count
 	* Create an instance of CalculateCosine and pass in the two new maps to calculate and print the Cosine Distance 
+	* Running time: Quadratic O(N^2);
+	* T(n) = 2n^2 + 4
 	* 
 	* @see #CalculateCosine
 	*/

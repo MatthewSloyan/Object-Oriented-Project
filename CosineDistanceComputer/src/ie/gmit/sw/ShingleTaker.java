@@ -35,6 +35,8 @@ public class ShingleTaker implements Callable<ConcurrentHashMap<Integer, List<In
 	* If it's not an instance of Poison then the shingle is taken from the word and is checked to see if its already in the map.
 	* If in map - The ArrayList<Index>() is iterated to find the file, and the frequency is incremented.
 	* If not in map - A new key, value pair is added to the map.
+	* Running time: Quadratic O(N^2);
+	* T(n) = n^2 + 14n
 	* 
 	* @return ConcurrentHashMap. This is the created map composed a shingle as the key and the value as an ArrayList of Index's
 	* @see #Poison
