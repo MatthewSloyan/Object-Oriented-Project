@@ -7,7 +7,7 @@ import java.io.IOException;
 * Running time: O(1)
 *
 * @author Matthew Sloyan
-* @see #UI
+* @see UI
 */
 
 public class Runner {

@@ -1,0 +1,17 @@
+WarAndPeace-LeoTolstoy.txt
+8.43 DeBelloGallico.txt 
+11.87 Dracula.txt 
+6.83 Frankenstein.txt 
+9.93 GrimmsFairyTales.txt 
+20.19 LesMiserables.txt 
+10.13 MobyDick.txt 
+8.60 PeterPan.txt 
+0.28 PoblachtNaHEireann.txt 
+10.84 PrideandPrejudice.txt 
+0.11 Test1.txt 
+0.12 Test2.txt 
+11.21 The Young Castellan.txt 
+11.37 TheAdventuresofSherlockHolmes.txt 
+8.76 TheAdventuresofTomSawyer.txt 
+8.31 TreasureIsland.txt 
+100.00 WarAndPeace-LeoTolstoy.txt 

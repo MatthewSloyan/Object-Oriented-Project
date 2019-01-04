@@ -12,8 +12,8 @@ public class Index {
 	/**
 	* Constructor for class
 	* 
-	* @param int - the number of times the word occurs
-	* @param int - the name of the file as a hashcode
+	* @param frequency the number of times the word occurs
+	* @param filename the name of the file as a hashcode
 	*/
 	public Index(int frequency, int filename) {
 		super();

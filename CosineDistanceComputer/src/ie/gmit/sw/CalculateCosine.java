@@ -18,11 +18,11 @@ public class CalculateCosine {
 	/**
 	* Constructor for class
 	* 
-	* @param String - query file string to print out file name rather than hashcode
-	* @param String - array of all files in the subject directory
-	* @param int - counted magnitude for the query file
-	* @param Map<Integer, Integer> - Map of all files and the dot product count for each
-	* @param Map<Integer, Integer> - Map of all files and the magnitude count for each
+	* @param queryFile query file string to print out file name rather than hashcode
+	* @param files array of all files in the subject directory
+	* @param queryMagnitude counted magnitude for the query file
+	* @param fileMapDotProduct Map of all files and the dot product count for each
+	* @param fileMapMagnitude Map of all files and the magnitude count for each
 	*/
 	public CalculateCosine(String queryFile, String[] files, double queryMagnitude,
 			Map<Integer, Integer> fileMapDotProduct, Map<Integer, Integer> fileMapMagnitude) {
@@ -40,8 +40,8 @@ public class CalculateCosine {
 	* create an instance of PrintResults and call printToFile(sb) to ask the user if they want to print results to file.
 	* Running time: Linear O(N)
 	* 
-	* @see #PrintResults
-	* @see #calculateCosine
+	* @see PrintResults
+	* @see calculateCosine
 	*/
 	public void print() {
 		StringBuilder sb = new StringBuilder();
@@ -59,8 +59,8 @@ public class CalculateCosine {
 	* Method used in every iteration of print() to return the formatted string of the calculated Cosine Distance.
 	* Running time: O(1)
 	* 
-	* @return String. Formatted string of query file, Cosine Distance and the subject file
-	* @see #print
+	* @return str Formatted string of query file, Cosine Distance and the subject file
+	* @see print
 	*/
 	private String calculateCosine(String file, double queryMagnitude, Integer dotProduct, Integer fileMagnitude) {
 		double cosine = 0;

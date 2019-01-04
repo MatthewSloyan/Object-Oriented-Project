@@ -22,9 +22,9 @@ public class FileParser implements Runnable{
 	/**
 	* Constructor
 	* 
-	* @param BlockingQueue<Word> - Queue of words to add to
-	* @param String - file directory
-	* @param boolean - name of file
+	* @param queue Queue of words to add to
+	* @param dir file directory
+	* @param file name of file
 	*/
 	public FileParser(BlockingQueue<Word> queue, String dir, String file){
 		this.queue = queue;
@@ -44,12 +44,8 @@ public class FileParser implements Runnable{
 	* Running time: Quadratic O(N^2);
 	* T(n) = n^2 + 6n
 	* 
-	* @see #Word
-	* @see #Poison
-	* @throws Exception if error occurs when reading file
-	* @exception FileNotFoundException
-	* @exception IOException
-	* @exception InterruptedException
+	* @see Word
+	* @see Poison
 	*/
 	public void run() {
 		BufferedReader br = null;

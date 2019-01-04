@@ -20,8 +20,8 @@ public class ShingleTaker implements Callable<ConcurrentHashMap<Integer, List<In
 	/**
 	* Constructor
 	* 
-	* @param BlockingQueue<Word> - Queue of words to take from
-	* @param int - number of files in the subject directory
+	* @param q Queue of words to take from
+	* @param count number of files in the subject directory
 	*/
 	public ShingleTaker(BlockingQueue<Word> q, int count){
 		this.queue = q;
@@ -33,16 +33,15 @@ public class ShingleTaker implements Callable<ConcurrentHashMap<Integer, List<In
 	* Infinite while loop till the queue is empty E.g fileCount is 0
 	* On each iteration a word is taken from the queue, if it's an instance of Poison then fileCount is decrements meaning one file has completed.
 	* If it's not an instance of Poison then the shingle is taken from the word and is checked to see if its already in the map.
-	* If in map - The ArrayList<Index>() is iterated to find the file, and the frequency is incremented.
+	* If in map - The ArrayList is iterated to find the file, and the frequency is incremented.
 	* If not in map - A new key, value pair is added to the map.
 	* Running time: Quadratic O(N^2);
 	* T(n) = n^2 + 14n
 	* 
 	* @return ConcurrentHashMap. This is the created map composed a shingle as the key and the value as an ArrayList of Index's
-	* @see #Poison
-	* @see #Index
-	* @throws Exception if process is Interrupted
-	* @exception InterruptedException
+	* @see Poison
+	* @see Index
+	* @throws Exception if error occurs
 	*/
 	public ConcurrentHashMap<Integer, List<Index>> call() throws Exception{
 		while(fileCount > 0) {

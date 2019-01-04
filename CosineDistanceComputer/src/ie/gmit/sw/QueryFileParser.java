@@ -27,8 +27,8 @@ public class QueryFileParser implements Callable<ConcurrentHashMap<Integer, Inte
 	/**
 	* Constructor
 	* 
-	* @param String - name of the file to read in
-	* @param boolean - whether or not the input is a url
+	* @param file name of the file to read in
+	* @param url whether or not the input is a url
 	*/
 	public QueryFileParser(String file, boolean url) {
 		super();
@@ -48,10 +48,9 @@ public class QueryFileParser implements Callable<ConcurrentHashMap<Integer, Inte
 	* Running time: Quadratic O(N^2);
 	* T(n) = n^2 + 10n
 	* 
-	* @return ConcurrentHashMap of the created map of words and count
+	* @return queryMap of the created map of words and count
 	* 
-	* @throws Exception if error occurs when reading file
-	* @exception IOException
+	* @throws Exception if error occurs
 	*/
 	public ConcurrentHashMap<Integer, Integer> call() throws Exception{
 		

@@ -21,11 +21,11 @@ public class CalculateDotProductAndMagnitude{
 	/**
 	* Constructor for class
 	* 
-	* @param ConcurrentHashMap<Integer, List<Index>> - Map of all unique words/files of the subject directory
-	* @param ConcurrentHashMap<Integer, Integer> - Map of all unique words and counts of the query file
-	* @param String - query file string to print out file name rather than hashcode
-	* @param String - array of all files in the subject directory
-	* @param long - running time of program
+	* @param fileMap Map of all unique words/files of the subject directory
+	* @param queryMap Map of all unique words and counts of the query file
+	* @param queryFile query file string to print out file name rather than hashcode
+	* @param files array of all files in the subject directory
+	* @param startTime running time of program
 	*/
 	public CalculateDotProductAndMagnitude(ConcurrentHashMap<Integer, List<Index>> fileMap,
 			ConcurrentHashMap<Integer, Integer> queryMap, String queryFile, String[] files, long startTime) {
@@ -45,7 +45,7 @@ public class CalculateDotProductAndMagnitude{
 	* Running time: Quadratic O(N^2);
 	* T(n) = 2n^2 + 4
 	* 
-	* @see #CalculateCosine
+	* @see CalculateCosine
 	*/
 
 	public void calculate() {

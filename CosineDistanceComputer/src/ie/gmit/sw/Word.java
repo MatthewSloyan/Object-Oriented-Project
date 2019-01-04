@@ -12,12 +12,12 @@ public class Word {
 	/**
 	* Constructor for class
 	* 
-	* @param int - the name of the file as a hashcode
-	* @param int - three words as a hashcode
+	* @param book the name of the file as a hashcode
+	* @param shingle three words as a hashcode
 	*/
-	public Word(int i, int shingle) {
+	public Word(int book, int shingle) {
 		super();
-		this.book = i;
+		this.book = book;
 		this.shingle = shingle;
 	}
 

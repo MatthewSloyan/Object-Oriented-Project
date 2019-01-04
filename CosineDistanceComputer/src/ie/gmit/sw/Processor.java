@@ -10,6 +10,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+//Github Respository - https://github.com/MatthewSloyan/Object-Oriented-Project
+
 /**
 * Process documents selected by user
 *
@@ -28,14 +30,14 @@ public class Processor {
 	* Running time: Linear O(N)
 	* T(n) = n + 14
 	* 
-	* @param String directory of files
-	* @param String query file or url entered by user to compare
-	* @param boolean if query is a URL or not
+	* @param dir directory of files
+	* @param queryFile query file or url entered by user to compare
+	* @param url if query is a URL or not
 	* 
-	* @see #FileParser
-	* @see #ShingleTaker
-	* @see #QueryFileParser
-	* @see #CalculateDotProductAndMagnitude
+	* @see FileParser
+	* @see ShingleTaker
+	* @see QueryFileParser
+	* @see CalculateDotProductAndMagnitude
 	*/
 	public void process(String dir, String queryFile, boolean url) {
 		File f = new File(dir);

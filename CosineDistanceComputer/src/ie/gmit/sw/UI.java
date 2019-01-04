@@ -26,14 +26,13 @@ public class UI {
 	* Create instance of Processor class to process inputs
 	* Running time: O(1)
 	*
-	* @see #Processor
-	* @throws Exception if input is invalid
-	* @exception IOException
+	* @see Processor
+	* @throws IOException if input is invalid
 	*/
 	public void display() throws IOException {
 			
 		while(keepRunning) {
-			System.out.println(" ======= Document Comparison Service =======");
+			System.out.println("======= Document Comparison Service =======");
 			
 			do {
 				System.out.println("Enter Subject Directory");
@@ -94,15 +93,15 @@ public class UI {
 				} 
 			} while (isValid);
 			
-			System.out.println("\n==========================");
+			System.out.println("\n========================");
 			System.out.println("Processing, please wait.");
-			System.out.println("==========================\n");
+			System.out.println("========================\n");
 			
 			//Create instance of Processor class and pass in user input details
 			new Processor().process(directory, queryFileURL, url);
 			
 			System.out.println("\nWould you like to start again? \n(1) Yes \n(2) No");
-			String option = console.next();
+			String option = console.nextLine();
 			
 			if (Integer.parseInt(option) != 1) {
 				keepRunning = false;

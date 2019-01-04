@@ -10,8 +10,8 @@ public class Poison extends Word{
 	/**
 	* Constructor for class
 	* 
-	* @param int - the name of the file as a hashcode
-	* @param int - three words as a hashcode
+	* @param book the name of the file as a hashcode
+	* @param shingle three words as a hashcode
 	*/
 	public Poison(int book, int shingle) {
 		super(book, shingle);
