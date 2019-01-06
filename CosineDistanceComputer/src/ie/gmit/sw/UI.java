@@ -75,7 +75,7 @@ public class UI {
 				} else if (Integer.parseInt(option) == 2) {
 					do {
 						System.out.println("Please Enter URL");
-						queryFileURL = console.next();
+						queryFileURL = console.nextLine();
 
 						isValid = true;
 
